@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>login</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- 配置servlet,映射一个url地址 -->
+  <!-- 注册servlet，起一个名字(自定义) -->
+  <servlet>
+  	<servlet-name>firstServlet</servlet-name>
+  	<servlet-class>com.aowin.servlet.FirstServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>secondServlet</servlet-name>
+  	<servlet-class>com.aowin.servlet.SecondServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>thirdServlet</servlet-name>
+  	<servlet-class>com.aowin.servlet.ThirdServlet</servlet-class>
+  </servlet>
+  
+  <!-- 给注册的servlet映射url地址 -->
+  <servlet-mapping>
+  	<servlet-name>firstServlet</servlet-name><!-- 与注册的servlet名字相同 -->
+  	<url-pattern>/first</url-pattern><!-- 以/(http://localhost:80/login)开头 -->
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>secondServlet</servlet-name>
+  	<url-pattern>/second</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>thirdServlet</servlet-name>
+  	<url-pattern>/third</url-pattern>
+  </servlet-mapping>
+</web-app>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <style type="text/css">
+        #tab {
+            overflow: hidden;
+            width: 400px;
+            height: 250px;
+            position: relative;
+            float: left;
+        }
+
+        #tab>img:not(:first-child) {
+            display: none;
+        }
+    </style>
+    <script>
+        var interval;
+        var pos = 0;
+        window.onload = function() {
+            var images = document.getElementsByTagName('img');
+            var tab = document.getElementById("tab");
+            tab.onmouseover = function() {
+                clearInterval(interval);
+            }
+            tab.onmouseout = function() {
+                run(images);
+            }
+            run(images);
+        }
+        var run = function(images) {
+            interval = setInterval(function() {
+                images[pos].style.display = 'none';
+                pos = ++pos == images.length ? 0 : pos;
+                images[pos].style.display = 'inline';
+            }, 1000);
+        }
+    </script>
+</head>
+
+<body>
+<div id="tab">
+    <img src="img/1.jpg" width="400" height="250" />
+    <img src="img/2.jpg" width="400" height="250" />
+    <img src="img/3.jpg" width="400" height="250" />
+</div>
+</body>
+
+</html>

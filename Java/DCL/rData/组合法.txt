@@ -1,0 +1,73 @@
+####两个二水平因子组合成一个三水平因子####
+myfunzh1<-function(f1){
+  library(DoE.base)
+  if(f1<=5){
+    des <-DoE.base::oa.design(ID=L9.3.4,nfactors = f1-1,nlevels =3,randomize = F)
+    des[,f1]<-des[,2]
+    des[des$A=="1","B"]<-1
+    des[des$A=="2","B"]<-2
+    des[des$A=="3","B"]<-1
+    des[des$A=="2","A"]<-1
+    des[des$A=="3","A"]<-2
+    des$A<-factor(des$A,levels = c('1','2'))
+    des$B<-factor(des$B,levels = c('1','2'))
+    colnames(des)<-LETTERS[1:f1]
+  }else if(f1>5&f1<=8){
+    des <-DoE.base::oa.design(ID=L18.2.1.3.7,nfactors = f1-1,nlevels =3,randomize = F)
+    des[,f1]<-des[,2]
+    des[des$A=="1","B"]<-1
+    des[des$A=="2","B"]<-2
+    des[des$A=="3","B"]<-1
+    des[des$A=="2","A"]<-1
+    des[des$A=="3","A"]<-2
+    des$A<-factor(des$A,levels = c('1','2'))
+    des$B<-factor(des$B,levels = c('1','2'))
+    colnames(des)<-LETTERS[1:f1]
+  }else if(f1>8&f1<=14){
+    des <-DoE.base::oa.design(ID=L27.3.13,nfactors = f1-1,nlevels =3,randomize = F)
+    des[,f1]<-des[,2]
+    des[des$A=="1","B"]<-1
+    des[des$A=="2","B"]<-2
+    des[des$A=="3","B"]<-1
+    des[des$A=="2","A"]<-1
+    des[des$A=="3","A"]<-2
+    des$A<-factor(des$A,levels = c('1','2'))
+    des$B<-factor(des$B,levels = c('1','2'))
+    colnames(des)<-LETTERS[1:f1]
+  }
+  return(des)
+}
+
+###一个二水平因子和一个三水平因子组合成一个四水平因子###
+myfunzh2<-function(f1){
+  library(DoE.base)
+  if(f1<=6){
+    des<- DoE.base::oa.design(ID=L16.4.5,nfactors = f1-1,nlevels =4,randomize = F)
+    des[,f1]<-des[,2]
+    des[des$A=="1","B"]<-1
+    des[des$A=="2","B"]<-2
+    des[des$A=="3","B"]<-2
+    des[des$A=="4","B"]<-3
+    des[des$A=="2","A"]<-1
+    des[des$A=="3","A"]<-2
+    des[des$A=="4","A"]<-2
+    des$A<-factor(des$A,levels = c('1','2'))
+    des$B<-factor(des$B,levels = c('1','2','3'))
+    colnames(des)<-LETTERS[1:f1]
+  }else if(f1>6&f1<=9){
+    des<- DoE.base::oa.design(ID=L32.4.8.8.1,nfactors = f1-1,nlevels =4,randomize = F)
+    des[,f1]<-des[,2]
+    des[des$A=="1","B"]<-1
+    des[des$A=="2","B"]<-2
+    des[des$A=="3","B"]<-2
+    des[des$A=="4","B"]<-3
+    des[des$A=="2","A"]<-1
+    des[des$A=="3","A"]<-2
+    des[des$A=="4","A"]<-2
+    des$A<-factor(des$A,levels = c('1','2'))
+    des$B<-factor(des$B,levels = c('1','2','3'))
+    colnames(des)<-LETTERS[1:f1]
+  }
+  return(des)
+}
+

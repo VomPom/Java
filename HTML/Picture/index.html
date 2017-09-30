@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<script type="text/javascript" src="imgchange.js" >
+		</script>
+		<style type="text/css">
+			input{
+				background-color: white;
+			}
+			</style>
+	</head>
+	<body onload="loadViews()">
+		<div>
+			<div id="images">
+				<img style="display: none" src="img/1.jpg" width="600" height="250" />
+				<img style="display: none" src="img/2.jpg" width="600" height="250"  />
+				<img style="display: none"  src="img/3.jpg" width="600" height="250" />
+			</div>
+
+			<div style='margin-left:450px;
+				margin-top:-50px;'>
+				<input name="button" type="button" value="1" style='width:20px'  onmouseout="mouseOutChangeColor(this)" onmouseover="mouseOverChangeColor(this)" />
+				<input name="button" type="button" value="2" style='width:20px'  onmouseout="mouseOutChangeColor(this)" onmouseover="mouseOverChangeColor(this)"/>
+				<input name="button" type="button" value="3" style='width:20px'  onmouseout="mouseOutChangeColor(this)" onmouseover="mouseOverChangeColor(this)"/>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<books>
+  <book bookid="1">
+    <bookname>think in java</bookname>
+    <catalog>java</catalog>
+    <price>108.0</price>
+  </book>
+  <book bookid="2">
+    <bookname>西游记</bookname>
+    <catalog>文学</catalog>
+    <price>58.0</price>
+  </book>
+  <book bookid="3">
+    <bookname>红楼梦</bookname>
+    <catalog>文学</catalog>
+    <price>118.0</price>
+  </book>
+  <book bookid="4">
+    <bookname>三国演义</bookname>
+    <catalog>文学</catalog>
+    <price>98.0</price>
+  </book>
+</books>

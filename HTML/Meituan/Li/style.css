@@ -1,0 +1,156 @@
+
+#whole{
+	width:900px;
+	height:700px;
+	margin-left:235px;
+	background-color:#F5F5F5
+
+}
+#top{
+	padding-top:1px;
+	width:900px;
+	height:55px;
+	background-color:#FFD705;
+}
+#logo{
+	width:115px;
+	height:55px;
+	float: left;
+	padding-top:1px;
+	margin-left:70px;
+	background-image:url('img/ceiling-logo2.png');
+	background-repeat:no-repeat;
+	background-position:-0px +6px;
+}
+#search{
+	width:420px;
+	height:40px;
+	padding: 1px;
+	margin-top: 7.5px;
+	margin-left:300px;
+	background-image:url('img/header.png');
+	background-repeat:no-repeat;
+	background-position:-0px -38px;
+}
+#search label{
+	width: 100px;
+	padding: 10px;
+	margin-top: 5px;
+	margin-left: 40px;
+	color: darkgray;
+	font-size: 14px;
+}
+#search #searchLabel{
+	width: 100px;
+	margin-left: 180px;
+	color: white;
+	font-size: 20px;
+}
+#font{
+	width:900px;
+	height:55px;
+	margin:auto;
+	color:#0000ff;
+	cursor:hand;
+	text-align:center;
+	margin-top:10px;
+}
+#num{
+	color:#ff0000;
+}
+#main{
+	width:820px;
+	height:600px;
+	margin-top:0px;
+	margin-left:40px;
+	margin-right:40px;
+	background-color:#FFFFFF;
+	
+}
+.tab{
+	height:250px;
+	width:600px;
+	border-bottom-color:#F5F5F5;
+	margin-bottom:20px;
+	border-bottom-style:solid;
+	border-bottom-width:15px;
+	
+}
+#list{
+	width:200px;
+	
+	
+}
+#list .nameAndPrice{
+	font-size:13px;
+	line-height:0;
+}
+#list .price{
+	float: right;
+}
+#list .count{
+	line-height:1.8;
+	display:block;
+	margin: 0;
+	font-size: 13px;
+	color: #ffc046;
+	text-align: right;
+}
+#list .sendInfo{
+	margin: 0;
+	padding: 0;
+	font-weight: 100;
+	font-size: 12px;
+	color: #999999;
+}
+#list  .sendPrice{
+	margin-left: 5px;
+}
+#list .time{
+	width: 100px;
+	margin-left: 30px;
+
+}
+#list .add{
+	margin-top: 10px;
+	float: right;
+	background-color: white;
+}
+.photo{
+	width:180px;
+	height:125px;
+	padding-right:10px;
+	padding-bottom: 12.5px;
+}
+#shoppinglist{
+
+	width:820px;
+	border-bottom-style:solid;
+	border-bottom-color:#CCCCCC;
+	
+}
+#empty{
+	margin-left:320px;
+	font-size:30px;
+	color:red;
+}
+#pay{
+	background-color:#FFD705;
+
+}
+#sum{
+	color:red;
+
+}
+
+#order{
+	color:#C787FF;
+	float:left;
+	cursor:hand;
+}
+
+
+
+
+
+
