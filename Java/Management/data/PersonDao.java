@@ -1,8 +1,8 @@
-package WORK.Java.Management.data;
+package Java.Management.data;
 
 
 
-import WORK.Java.Management.bean.Person;
+import Java.Management.bean.Person;
 
 import java.sql.*;
 import java.util.ArrayList;

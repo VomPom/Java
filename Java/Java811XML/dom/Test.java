@@ -1,6 +1,6 @@
-package WORK.Java.Java811XML.dom;
+package Java.Java811XML.dom;
 
-import WORK.Java.Java811XML.model.Member;
+import Java.Java811XML.model.Member;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

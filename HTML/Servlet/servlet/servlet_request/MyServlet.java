@@ -1,4 +1,4 @@
-package WORK.HTML.Servlet.servlet.servlet_request;
+package HTML.Servlet.servlet.servlet_request;
 
 import java.io.IOException;
 import java.io.PrintWriter;

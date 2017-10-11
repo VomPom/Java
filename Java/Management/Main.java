@@ -1,6 +1,7 @@
-package WORK.Java.Management;
+package Java.Management;
 
-import WORK.Java.Management.views.LoginView;
+import Java.Management.views.LoginView;
+import Java.Management.views.MainView;
 import com.sun.tools.javac.util.Convert;
 
 import java.awt.*;
@@ -14,8 +15,8 @@ import java.util.Random;
  */
 public class Main {
     public static void main(String []args){
-        new LoginView();
-
+        //new LoginView();
+        new MainView();
     }
 
 }

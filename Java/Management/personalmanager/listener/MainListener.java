@@ -1,10 +1,10 @@
-package WORK.Java.Management.personalmanager.listener;
+package Java.Management.personalmanager.listener;
 
-import WORK.Java.Management.personalmanager.dao.PersonDao;
-import WORK.Java.Management.personalmanager.frame.EditFrame;
-import WORK.Java.Management.personalmanager.model.Person;
-import WORK.Java.Management.personalmanager.util.Dom4j;
-import WORK.Java.Management.personalmanager.util.MyUtil;
+import Java.Management.personalmanager.dao.PersonDao;
+import Java.Management.personalmanager.frame.EditFrame;
+import Java.Management.personalmanager.model.Person;
+import Java.Management.personalmanager.util.Dom4j;
+import Java.Management.personalmanager.util.MyUtil;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,6 +1,6 @@
-package WORK.Java.Management.Comparator;
+package Java.Management.Comparator;
 
-import WORK.Java.Management.bean.Person;
+import Java.Management.bean.Person;
 
 import java.util.Comparator;
 

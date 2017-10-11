@@ -1,7 +1,7 @@
-package WORK.Java.Management.personalmanager.frame;
+package Java.Management.personalmanager.frame;
 
-import WORK.Java.Management.personalmanager.dao.ManagerDao;
-import WORK.Java.Management.personalmanager.model.Manager;
+import Java.Management.personalmanager.dao.ManagerDao;
+import Java.Management.personalmanager.model.Manager;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -1,6 +1,6 @@
-package WORK.Java.Management.personalmanager.frame;
+package Java.Management.personalmanager.frame;
 
-import WORK.Java.Management.personalmanager.listener.EditListener;
+import Java.Management.personalmanager.listener.EditListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;

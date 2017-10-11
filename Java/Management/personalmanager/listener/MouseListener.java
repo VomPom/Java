@@ -1,8 +1,8 @@
-package WORK.Java.Management.personalmanager.listener;
+package Java.Management.personalmanager.listener;
 
-import WORK.Java.Management.personalmanager.model.Compare;
-import WORK.Java.Management.personalmanager.model.Person;
-import WORK.Java.Management.personalmanager.util.MyUtil;
+import Java.Management.personalmanager.model.Compare;
+import Java.Management.personalmanager.model.Person;
+import Java.Management.personalmanager.util.MyUtil;
 
 import java.awt.Point;
 import java.awt.event.MouseAdapter;

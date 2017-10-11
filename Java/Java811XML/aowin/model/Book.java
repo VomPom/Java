@@ -1,4 +1,4 @@
-package WORK.Java.Java811XML.aowin.model;
+package Java.Java811XML.aowin.model;
 
 public class Book {
 	private Integer bookid;//作为xml的属性

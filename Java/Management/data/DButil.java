@@ -1,4 +1,4 @@
-package WORK.Java.Management.data;
+package Java.Management.data;
 
 import java.sql.*;
 

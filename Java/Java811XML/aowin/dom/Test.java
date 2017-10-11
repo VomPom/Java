@@ -1,9 +1,9 @@
-package WORK.Java.Java811XML.aowin.dom;
+package Java.Java811XML.aowin.dom;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
+import Java.Java811XML.aowin.model.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
@@ -13,7 +13,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import WORK.Java.Java811XML.aowin.model.Book;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

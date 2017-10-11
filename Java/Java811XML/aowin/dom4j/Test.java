@@ -1,4 +1,3 @@
-package WORK.Java.Java811XML.aowin.dom4j;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import WORK.Java.Java811XML.aowin.model.Book;
+
+import Java.Java811XML.aowin.model.Book;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;

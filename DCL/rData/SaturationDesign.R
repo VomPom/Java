@@ -1,6 +1,7 @@
 
 ##当因子数f1<12时，使用此函数##
 myfun12<-function(f1){
+
   library(FrF2)
   des<-pb(12,f1)
   return(des)

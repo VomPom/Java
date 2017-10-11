@@ -1,0 +1,528 @@
+
+####t为望大望小特性    t==0时为望目特性，目标值为M
+
+myfunanova <- function(Resultdata,jiao,t,f1,M=0){
+  vmax<-max(Resultdata[,1:(ncol(Resultdata)-1)])
+  for(i in 1:(ncol(Resultdata)-1)){
+    Resultdata[,i]<-as.factor(Resultdata[,i])
+  }
+  if(jiao==0){
+    formula="y~."
+  }else if(jiao==1){
+    formula="y~.+A:B"
+  }else if(jiao==2){
+    formula="y~.+A:B+A:C"
+  }else if(jiao==3){
+    formula="y~.+A:B+C:D"
+  }
+  for(i in 1:(ncol(Resultdata)-1)){
+    Resultdata[,i]<-factor(Resultdata[,i],levels = c(1:vmax))
+  }
+  
+  lm=lm(formula,data=Resultdata)
+  mtable<-sapply(Resultdata[,c(1:(ncol(Resultdata)-1))],function(x) tapply(Resultdata$y,x,mean))
+  anova<-anova(lm)
+  q<-c()
+  m<-mean(Resultdata$y)
+  mean<-0
+  if(jiao==0){
+    df<-anova$Df[f1+1]
+    S<-anova$`Sum Sq`[f1+1]
+    for(i in 1:f1){
+      p<-anova$`Pr(>F)`[i]
+      if(p<=0.1){
+        if(t==-1){
+          q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+          mean=mean+min(mtable[,i])-m
+        }else if(t==1){
+          q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+          mean=mean+max(mtable[,i])-m
+        }else if(t==0){
+          q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+          mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+        }
+      }else{
+        df=df+anova$Df[i]
+        S=S+anova$`Sum Sq`[i]
+      }
+    }
+    mean=mean+m
+    section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+    estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+    biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+  }else if(jiao==1){
+    df<-anova$Df[f1+2]
+    S<-anova$`Sum Sq`[f1+2]
+    Mtable<-Resultdata%>%group_by(A,B)%>%summarise(mean(y))
+    if(anova$`Pr(>F)`[f1+1]<=0.1){
+      if(t==1){
+        q<-paste0(q,"A",Mtable[which.max(Mtable$`mean(y)`),1],"B",Mtable[which.max(Mtable$`mean(y)`),2],sep=",")
+        mean=mean+max(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),2]
+      }else if(t==-1){
+        q<-paste0(q,"A",Mtable[which.min(Mtable$`mean(y)`),1],"B",Mtable[which.min(Mtable$`mean(y)`),2],sep=",")
+        mean=mean+min(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),2]
+      }else if(t==0){
+        q<-paste0(q,"A",Mtable[which.min(abs(Mtable$`mean(y)`-M)),1],"B",Mtable[which.min(abs(Mtable$`mean(y)`-M)),2],sep=",")
+        mean=mean+Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]+m-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),2]
+      }
+      for(i in 1:2){
+        if(anova$`Pr(>F)`[i]<=0.1){
+            if(t==-1){
+              mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),i]),i]-m
+            }else if(t==1){
+              mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),i]),i]-m
+            }else if(t==0){
+              mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),i]),i]-m
+            }
+        }else{
+          df=df+anova$Df[i]
+          S=S+anova$`Sum Sq`[i]
+        }
+      }
+      for(i in 3:f1){
+        p<-anova$`Pr(>F)`[i]
+        if(p<=0.1){
+          if(t==-1){
+            q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+            mean=mean+min(mtable[,i])-m
+          }else if(t==1){
+            q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+            mean=mean+max(mtable[,i])-m
+          }else if(t==0){
+            q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+            mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+          }
+        }else{
+          df=df+anova$Df[i]
+          S=S+anova$`Sum Sq`[i]
+        }
+      }
+      mean=mean+m
+      section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+      estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+      biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+    }else{
+      df<-anova$Df[f1+2]
+      S<-anova$`Sum Sq`[f1+2]
+      for(i in 1:f1){
+        p<-anova$`Pr(>F)`[i]
+        if(p<=0.1){
+          if(t==-1){
+            q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+            mean=mean+min(mtable[,i])-m
+          }else if(t==1){
+            q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+            mean=mean+max(mtable[,i])-m
+          }else if(t==0){
+            q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+            mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+          }
+        }else{
+          df=df+anova$Df[i]
+          S=S+anova$`Sum Sq`[i]
+        }
+      }
+      df=df+anova$Df[f1+1]
+      S=S+anova$`Sum Sq`[f1+1]
+      mean=mean+m
+      section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+      estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+      biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+    }
+  }else if(jiao==2){
+    df<-anova$Df[f1+3]
+    S<-anova$`Sum Sq`[f1+3]
+    if(anova$`Pr(>F)`[f1+1]<=0.1){
+      if(anova$`Pr(>F)`[f1+2]<=0.1){
+        Mtable<-Resultdata%>%group_by(A,B,C)%>%summarise(mean(y))
+        if(t==1){
+          q<-paste0(q,"A",Mtable[which.max(Mtable$`mean(y)`),1],"B",Mtable[which.max(Mtable$`mean(y)`),2],"C",Mtable[which.max(Mtable$`mean(y)`),3],sep=",")
+          mean=mean+max(Mtable$`mean(y)`)+2*m-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),2]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),3]),3]
+        }else if(t==-1){
+          q<-paste0(q,"A",Mtable[which.min(Mtable$`mean(y)`),1],"B",Mtable[which.min(Mtable$`mean(y)`),2],"C",Mtable[which.min(Mtable$`mean(y)`),3],sep=",")
+          mean=mean+min(Mtable$`mean(y)`)+2*m-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),2]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),3]),3]
+        }else if(t==0){
+          q<-paste0(q,"A",Mtable[which.min(abs(Mtable$`mean(y)`-M)),1],"B",Mtable[which.min(abs(Mtable$`mean(y)`-M)),2],"C",Mtable[which.min(abs(Mtable$`mean(y)`-M)),3],sep=",")
+          mean=mean+Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]+2*m-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),2]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]),3]
+        }
+        for(i in 1:3){
+          if(anova$`Pr(>F)`[i]<=0.1){
+              if(t==-1){
+                mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),i]),i]-m
+              }else if(t==1){
+                mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),i]),i]-m
+              }else if(t==0){
+                mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),i]),i]-m
+              }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        for(i in 4:f1){
+          p<-anova$`Pr(>F)`[i]
+          if(p<=0.1){
+            if(t==-1){
+              q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+              mean=mean+min(mtable[,i])-m
+            }else if(t==1){
+              q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+              mean=mean+max(mtable[,i])-m
+            }else if(t==0){
+              q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+              mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+            }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        mean=mean+m
+        section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+        estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+        biao<-c(list("方差分析"=anova,list("各水平均值"=mtable),estimate))
+      }else {
+        Mtable<-Resultdata%>%group_by(A,B)%>%summarise(mean(y))
+          if(t==1){
+            q<-paste0(q,"A",Mtable[which.max(Mtable$`mean(y)`),1],"B",Mtable[which.max(Mtable$`mean(y)`),2],sep=",")
+            mean=mean+max(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),2]
+          }else if(t==-1){
+            q<-paste0(q,"A",Mtable[which.min(Mtable$`mean(y)`),1],"B",Mtable[which.min(Mtable$`mean(y)`),2],sep=",")
+            mean=mean+min(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),2]
+          }else if(t==0){
+            q<-paste0(q,"A",Mtable[which.min(abs(Mtable$`mean(y)`-M)),1],"B",Mtable[which.min(abs(Mtable$`mean(y)`-M)),2],sep=",")
+            mean=mean+Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]+m-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),2]
+          }
+        for(i in 1:2){
+            if(anova$`Pr(>F)`[i]<=0.1){
+                if(t==-1){
+                  mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),i]),i]-m
+                }else if(t==1){
+                  mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),i]),i]-m
+                }else if(t==0){
+                  mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),i]),i]-m
+                }
+            }else{
+              df=df+anova$Df[i]
+              S=S+anova$`Sum Sq`[i]
+            }
+          }
+          for(i in 3:f1){
+            p<-anova$`Pr(>F)`[i]
+            if(p<=0.1){
+              if(t==-1){
+                q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+                mean=mean+min(mtable[,i])-m
+              }else if(t==1){
+                q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+                mean=mean+max(mtable[,i])-m
+              }else if(t==0){
+                q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+                mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+              }
+            }else{
+              df=df+anova$Df[i]
+              S=S+anova$`Sum Sq`[i]
+            }
+          }
+          df=df+anova$Df[f1+2]
+          S=S+anova$`Sum Sq`[f1+2]
+          mean=mean+m
+          section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+          estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+          biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+      }
+   }else{
+     Mtable<-Resultdata%>%group_by(A,C)%>%summarise(mean(y))
+     if(anova$`Pr(>F)`[f1+2]<=0.1){
+       if(t==1){
+         q<-paste0(q,"A",Mtable[which.max(Mtable$`mean(y)`),1],"C",Mtable[which.max(Mtable$`mean(y)`),2],sep=",")
+         mean=mean+max(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),2]
+       }else if(t==-1){
+         q<-paste0(q,"A",Mtable[which.min(Mtable$`mean(y)`),1],"C",Mtable[which.min(Mtable$`mean(y)`),2],sep=",")
+         mean=mean+min(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),2]
+       }else if(t==0){
+         q<-paste0(q,"A",Mtable[which.min(abs(Mtable$`mean(y)`-M)),1],"C",Mtable[which.min(abs(Mtable$`mean(y)`-M)),2],sep=",")
+         mean=mean+Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]+m-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),2]
+       }
+         if(anova$`Pr(>F)`[1]<=0.1){
+             if(t==-1){
+               mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-m
+             }else if(t==1){
+               mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-m
+             }else if(t==0){
+               mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-m
+             }
+           }else{
+             df=df+anova$Df[1]
+             S=S+anova$`Sum Sq`[1]
+          }
+         if(anova$`Pr(>F)`[3]<=0.1){
+           if(t==-1){
+             mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),3]-m
+           }else if(t==1){
+             mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),3]-m
+           }else if(t==0){
+             mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),3]-m
+           }
+         }else{
+           df=df+anova$Df[3]
+           S=S+anova$`Sum Sq`[3]
+         }            
+       for(i in c(2,4:f1)){
+         p<-anova$`Pr(>F)`[i]
+         if(p<=0.1){
+           if(t==-1){
+             q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+             mean=mean+min(mtable[,i])-m
+           }else if(t==1){
+             q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+             mean=mean+max(mtable[,i])-m
+           }else if(t==0){
+             q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+             mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+           }
+         }else{
+           df=df+anova$Df[i]
+           S=S+anova$`Sum Sq`[i]
+         }
+       }
+       df=df+anova$Df[f1+1]
+       S=S+anova$`Sum Sq`[f1+1]
+       mean=mean+m
+       section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+       estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+       biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+     }else{
+       for(i in 1:f1){
+         p<-anova$`Pr(>F)`[i]
+         if(p<=0.1){
+           if(t==-1){
+             q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+             mean=mean+min(mtable[,i])-m
+           }else if(t==1){
+             q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+             mean=mean+max(mtable[,i])-m
+           }else if(t==0){
+             q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+             mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+           }
+         }else{
+           df=df+anova$Df[i]
+           S=S+anova$`Sum Sq`[i]
+         }
+       }
+       df=df+anova$Df[f1+1]+anova$Df[f1+2]
+       S=S+anova$`Sum Sq`[f1+1]+anova$`Sum Sq`[f1+2]
+       mean=mean+m
+       section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+       estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+       biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+     }
+   }
+  }else if(jiao==3){
+    df<-anova$Df[f1+3]
+    S<-anova$`Sum Sq`[f1+3]
+    if(anova$`Pr(>F)`[f1+1]<=0.1){
+      if(anova$`Pr(>F)`[f1+2]<=0.1){
+        Mtable<-Resultdata%>%group_by(A,B)%>%summarise(mean(y))
+        Mtable1<-Resultdata%>%group_by(C,D)%>%summarise(mean(y))
+        if(t==1){
+          q<-paste0(q,"A",Mtable[which.max(Mtable$`mean(y)`),1],"B",Mtable[which.max(Mtable$`mean(y)`),2],"C",Mtable1[which.max(Mtable1$`mean(y)`),1],"D",Mtable1[which.max(Mtable1$`mean(y)`),2],sep=",")
+          mean=mean+max(Mtable$`mean(y)`)+max(Mtable1$`mean(y)`)+2*m-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),2]-mtable[as.numeric(Mtable1[which.max(Mtable1$`mean(y)`),1]),3]-mtable[as.numeric(Mtable1[which.max(Mtable1$`mean(y)`),2]),4]
+        }else if(t==-1){
+          q<-paste0(q,"A",Mtable[which.min(Mtable$`mean(y)`),1],"B",Mtable[which.min(Mtable$`mean(y)`),2],"C",Mtable1[which.min(Mtable1$`mean(y)`),1],"D",Mtable1[which.min(Mtable1$`mean(y)`),2],sep=",")
+          mean=mean+min(Mtable$`mean(y)`)+min(Mtable1$`mean(y)`)+2*m-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),2]-mtable[as.numeric(Mtable1[which.min(Mtable1$`mean(y)`),1]),3]-mtable[as.numeric(Mtable1[which.min(Mtable1$`mean(y)`),2]),4]
+        }else if(t==0){
+          q<-paste0(q,"A",Mtable[which.min(abs(Mtable$`mean(y)`-M)),1],"B",Mtable[which.min(abs(Mtable$`mean(y)`-M)),2],"C",Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),1],"D",Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),2],sep=",")
+          mean=mean+Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]+Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),3]+2*m-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),2]-mtable[as.numeric(Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),1]),3]-mtable[as.numeric(Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),2]),4]
+        }
+        for(i in 1:2){
+          if(anova$`Pr(>F)`[i]<=0.1){
+            if(t==-1){
+              mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),i]),i]-m
+            }else if(t==1){
+              mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),i]),i]-m
+            }else if(t==0){
+              mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),i]),i]-m
+            }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        for(i in 3:4){
+          if(anova$`Pr(>F)`[i]<=0.1){
+            if(t==-1){
+              mean=mean+mtable[as.numeric(Mtable1[which.min(Mtable1$`mean(y)`),i-2]),i]-m
+            }else if(t==1){
+              mean=mean+mtable[as.numeric(Mtable1[which.max(Mtable1$`mean(y)`),i-2]),i]-m
+            }else if(t==0){
+              mean=mean+mtable[as.numeric(Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),i-2]),i]-m
+            }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        for(i in 5:f1){
+          p<-anova$`Pr(>F)`[i]
+          if(p<=0.1){
+            if(t==-1){
+              q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+              mean=mean+min(mtable[,i])-m
+            }else if(t==1){
+              q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+              mean=mean+max(mtable[,i])-m
+            }else if(t==0){
+              q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+              mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+            }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        mean=mean+m
+        section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+        estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+        biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+      }else{
+        Mtable<-Resultdata%>%group_by(A,B)%>%summarise(mean(y))
+        if(t==1){
+          q<-paste0(q,"A",Mtable[which.max(Mtable$`mean(y)`),1],"B",Mtable[which.max(Mtable$`mean(y)`),2],sep=",")
+          mean=mean+max(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),2]),2]
+        }else if(t==-1){
+          q<-paste0(q,"A",Mtable[which.min(Mtable$`mean(y)`),1],"B",Mtable[which.min(Mtable$`mean(y)`),2],sep=",")
+          mean=mean+min(Mtable$`mean(y)`)+m-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),1]),1]-mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),2]),2]
+        }else if(t==0){
+          q<-paste0(q,"A",Mtable[which.min(abs(Mtable$`mean(y)`-M)),1],"B",Mtable[which.min(abs(Mtable$`mean(y)`-M)),2],sep=",")
+          mean=mean+Mtable[which.min(abs(Mtable$`mean(y)`-M)),3]+m-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),1]),1]-mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),2]),2]
+        }
+        for(i in 1:2){
+          if(anova$`Pr(>F)`[i]<=0.1){
+            if(t==-1){
+              mean=mean+mtable[as.numeric(Mtable[which.min(Mtable$`mean(y)`),i]),i]-m
+            }else if(t==1){
+              mean=mean+mtable[as.numeric(Mtable[which.max(Mtable$`mean(y)`),i]),i]-m
+            }else if(t==0){
+              mean=mean+mtable[as.numeric(Mtable[which.min(abs(Mtable$`mean(y)`-M)),i]),i]-m
+            }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        for(i in 3:f1){
+          p<-anova$`Pr(>F)`[i]
+          if(p<=0.1){
+            if(t==-1){
+              q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+              mean=mean+min(mtable[,i])-m
+            }else if(t==1){
+              q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+              mean=mean+max(mtable[,i])-m
+            }else if(t==0){
+              q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+              mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+            }
+          }else{
+            df=df+anova$Df[i]
+            S=S+anova$`Sum Sq`[i]
+          }
+        }
+        df=df+anova$Df[f1+2]
+        S=S+anova$`Sum Sq`[f1+2]
+        section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+        estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+        biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+      }
+    }else{
+     if(anova$`Pr(>F)`[f1+2]<=0.1){
+      Mtable1<-Resultdata%>%group_by(C,D)%>%summarise(mean(y))
+      if(t==1){
+        q<-paste0(q,"C",Mtable1[which.max(Mtable1$`mean(y)`),1],"D",Mtable1[which.max(Mtable1$`mean(y)`),2],sep=",")
+        mean=mean+max(Mtable1$`mean(y)`)+m-mtable[as.numeric(Mtable1[which.max(Mtable1$`mean(y)`),1]),3]-mtable[as.numeric(Mtable1[which.max(Mtable1$`mean(y)`),2]),4]
+      }else if(t==-1){
+        q<-paste0(q,"C",Mtable1[which.min(Mtable1$`mean(y)`),1],"D",Mtable1[which.min(Mtable1$`mean(y)`),2],sep=",")
+        mean=mean+min(Mtable1$`mean(y)`)+m-mtable[as.numeric(Mtable1[which.min(Mtable1$`mean(y)`),1]),3]-mtable[as.numeric(Mtable1[which.min(Mtable1$`mean(y)`),2]),4]
+      }else if(t==0){
+        q<-paste0(q,"C",Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),1],"D",Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),2],sep=",")
+        mean=mean+Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),3]+m-mtable[as.numeric(Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),1]),3]-mtable[as.numeric(Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),2]),4]
+      }
+      for(i in 3:4){
+        if(anova$`Pr(>F)`[i]<=0.1){
+          if(t==-1){
+            mean=mean+mtable[as.numeric(Mtable1[which.min(Mtable1$`mean(y)`),i-2]),i]-m
+          }else if(t==1){
+            mean=mean+mtable[as.numeric(Mtable1[which.max(Mtable1$`mean(y)`),i-2]),i]-m
+          }else if(t==0){
+            mean=mean+mtable[as.numeric(Mtable1[which.min(abs(Mtable1$`mean(y)`-M)),i-2]),i]-m
+          }
+        }else{
+          df=df+anova$Df[i]
+          S=S+anova$`Sum Sq`[i]
+        }
+      }
+      for(i in c(1,2,5:f1)){
+        p<-anova$`Pr(>F)`[i]
+        if(p<=0.1){
+          if(t==-1){
+            q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+            mean=mean+min(mtable[,i])-m
+          }else if(t==1){
+            q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+            mean=mean+max(mtable[,i])-m
+          }else if(t==0){
+            q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+            mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+          }
+        }else{
+          df=df+anova$Df[i]
+          S=S+anova$`Sum Sq`[i]
+        }
+      }
+      df=df+anova$Df[f1+1]
+      S=S+anova$`Sum Sq`[f1+1]
+      mean=mean+m
+      section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+      estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+      biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+    }else{
+      for(i in 1:f1){
+        p<-anova$`Pr(>F)`[i]
+        if(p<=0.1){
+          if(t==-1){
+            q<-paste0(q,LETTERS[i],which.min(mtable[,i]),sep=",")
+            mean=mean+min(mtable[,i])-m
+          }else if(t==1){
+            q<-paste0(q,LETTERS[i],which.max(mtable[,i]),sep=",")
+            mean=mean+max(mtable[,i])-m
+          }else if(t==0){
+            q<-paste0(q,LETTERS[i],which.min(abs(mtable[,i]-M)),sep=",")
+            mean=mean+mtable[which.min(abs(mtable[,i]-M)),i]-m
+          }
+        }else{
+          df=df+anova$Df[i]
+          S=S+anova$`Sum Sq`[i]
+        }
+      }
+      df=df+anova$Df[f1+1]+anova$Df[f1+2]
+      S=S+anova$`Sum Sq`[f1+1]+anova$`Sum Sq`[f1+2]
+      mean=mean+m
+      section<-paste0("(",round(mean-qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),",",round(mean+qt(0.95,df)*sqrt(S/df)/sqrt(nrow(Resultdata)/(1+sum(anova$Df)-df)),2),")")
+      estimate<-list("最优水平选取"=q,"点估计"=mean,"区间估计"=section)
+      biao<-c(list("方差分析"=anova),list("各水平均值"=mtable),estimate)
+     }
+    }
+  }
+  return(biao)
+}
+
+
+
+
+
+
+
+

@@ -1,9 +1,9 @@
-package WORK.Java.Management.listener;
+package Java.Management.listener;
 
-import WORK.Java.Management.Comparator.MyComparator;
-import WORK.Java.Management.bean.Person;
-import WORK.Java.Management.data.PersonDao;
-import WORK.Java.Management.views.MainView;
+import Java.Management.Comparator.MyComparator;
+import Java.Management.bean.Person;
+import Java.Management.data.PersonDao;
+import Java.Management.views.MainView;
 import javax.swing.table.JTableHeader;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

@@ -1,6 +1,6 @@
-package WORK.Java.Management.views;
+package Java.Management.views;
 
-import WORK.Java.Management.listener.LoginListener;
+import Java.Management.listener.LoginListener;
 
 import javax.swing.*;
 import java.awt.*;

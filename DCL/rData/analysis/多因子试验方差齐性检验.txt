@@ -1,0 +1,14 @@
+
+##方差齐性检验##
+###输入变量有resultdata为试验计划表以及结果y,f1为因子个数
+Resultdata<-read.csv("D:/data/有一次重复正交表1.csv",header = F)
+
+myfunHtest<-function(Resultdata,f1){
+  bar<-bartlett.test(as.formula(paste("y~interaction","(",paste(LETTERS[1:f1],sep = "",collapse = ","),")",sep="")),data = Resultdata)
+  if(bar$p.value<0.05) c<-c("不满足方差齐性，进行极差法分析")
+  else c<-c("满足方差齐性，可以进行方差分析")
+  result<-list("方差齐性检验"=bar,"分析结果"=c)
+  return(result)
+}
+
+myfunHtest(Resultdata=Resultdata,f1=4)

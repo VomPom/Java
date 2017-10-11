@@ -1,0 +1,26 @@
+library(lsmeans)
+library(daewr)
+### BIBD方差分析,effect中1为随机效应，0为固定效应
+
+myfunBIBD<-function(effect){
+  Resultdata<-read.csv("/Users/mac/Desktop/Java/JavaWorking/src/DCL/rData/analysis/data/BIBD.csv",header = TRUE)
+  Resultdata<-as.matrix(Resultdata)
+  Resultdata<-Resultdata[,-1]
+  Resultdata.df <- data.frame(y=as.vector(Resultdata),
+                              treat=factor(rep(1:nrow(Resultdata),1)),
+                              block=factor(rep(1:ncol(Resultdata),each=nrow(Resultdata)))
+  )
+  lm<-lm(y~treat+block,Resultdata.df)
+  aov<-aov(y~treat+block,Resultdata.df)
+  saov<-anova(lm)
+  lsmean<-lsmeans(aov,pairwise~treat,adjust=("tukey"))
+  if(effect==0){
+    biao<-list(多重比较=lsmean$contrasts,水平均值及区间估计=lsmean$lsmeans,方差分析=saov)
+  }else if(effect==1){
+    n0<-length(na.omit(Resultdata[1,]))
+    sigma2<-saov$`Mean Sq`[2]+saov$`Mean Sq`[3]
+    sigmaA2<-(saov$`Mean Sq`[1]-sigma2)/n0
+    biao<-list(水平方差=sigmaA2,试验误差的方差=sigma2,总方差估计值=(sigma2+sigmaA2),方差分析=saov)
+  }
+  return(biao)
+}

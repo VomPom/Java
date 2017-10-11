@@ -1,7 +1,7 @@
-package WORK.Java.Management.personalmanager.dao;
+package Java.Management.personalmanager.dao;
 
-import WORK.Java.Management.personalmanager.model.Person;
-import WORK.Java.Management.personalmanager.util.DbUtil;
+import Java.Management.personalmanager.model.Person;
+import Java.Management.personalmanager.util.DbUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

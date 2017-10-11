@@ -17,19 +17,19 @@ import org.rosuda.JRI.Rengine;
 
 public class MainControl {
     public static void main(String []args){
-        //new MainFrame();套装和素颜霜，送了好多东
-      // blockDesignMatrix(5,2,10);
-        mainJudge();
-        //chainArea(32,2,5,8);
-//        int []iv={3,2,2,2,2,3};
-//        parameterDesign(iv);
-       // saturationDesign(20);
-//
-        //double[]range=new double[]{130,70,0.5,2.0,0.05,0.1,500,1500};
+        //new MainFrame();套
+        //blockDesignMatrix(5,2,10);
+        Rengine engine=new Rengine (new String [] {"--vanilla"}, false, null);
+        REXP x=engine.eval("1:10");
 
-       //regressionAnalysisOnce(4,4,range);
-        //pseudo2137(7,5);
-        //regressionAnalysisTwice(0,3);
+        System.out.println("REXP result = "+x);
+        // mainJudge();
+        //chainArea(32,2,5,8);
+        // int []iv={3,2,2,2,2,3};
+        //CBD(3,2);
+        //saturationDesign(20);
+        //double[]range=new double[]{130,70,2.0,0.5,0.1,0.05,1500,500};
+       // regressionAnalysisOnce(4,4,range);
 }
 
     /**
@@ -37,32 +37,34 @@ public class MainControl {
      */
 
     public static void mainJudge(){
-         int b=2;//区组数
-         int []ki={8,5,8,7,9};//每个区的数
+         int b=1;//区组数
+         int []ki={3,1,2,3};//每个区的数
          int k=minOfK(ki);//每个区的最小的容纳水平数
          /**
          *  f1 f2 f3  相关数据设计
          */
-         int []vi={3,3,3,3};//f1 每个因子的水平
+         int []vi={3,3,3,2,2};//f1 每个因子的水平
          int v=vi[0];//水平数   单因子的话 就一个,多因子 v1 v2 v3 f1
 
-         int f1=vi.length;//因子水平个数
-         int []viF2={};//噪声因子的水平数目 f2 每个因子的水平
-         int []viF3={};//信号因子的水平数目 f3 每个因子的水平
-         int f3=viF3.length;//信号因子个数
-         int f2=viF2.length+f3;//噪声因子个数
-         double[]range=new double[]{130,70,0.5,2.0,0.05,0.1,500,1500};
+         int f1=vi.length;  //可控因子水平个数
+         int []viF2={}; //噪声因子的水平数目 f2 每个因子的水平
+         int []viF3={}; //信号因子的水平数目 f3 每个因子的水平
+         int f3=viF3.length;    //信号因子个数
+         int f2=viF2.length+f3; //噪声因子个数
+         double[]range=new double[]{200,50,30,10,1.66,0.58,0.7,0.3,2.5,-2.5};
 
-         int l=0;//随机效应
-         int lamda=0;//相遇数
-         int cost=1;//成本
-         int q=1;//定性1 定量0
-         int z=0;//是否可以综合
-         int n=21;//根据实验条件获取
-         int j=0;//交互作用的类型
-         int f=f1+f2+f3;//总因子数
+         int l=0;   //随机效应
+         int lamda=0;   //相遇数
+         int cost=1;    //成本
+         int []qi={1,0,1,0,0};  //定性1 定量0 和vi'的个数相对应
+         int z=0;   //是否可以综合噪声 0没综合
+         int n=21;  //根据实验条件获取
+         int j=0;   //交互作用的类型
+         int f=f1+f2+f3;    //总因子数
          int m=v/b;
-         int regressionType=1;//1代表 一次回归分析,2代表 2次分析,
+         int regressionType=1;  //1代表 一次回归分析,2代表 2次分析,
+         int t=0;   //数据特性   0 望目 －1 望小 1望大
+
 
          if(f1==1) {//单因子
              if (m >= 2) {
@@ -132,7 +134,7 @@ public class MainControl {
 
                 System.out.println("成本分析"); //人工处理
                 System.out.println("时间和金钱成本");
-                    if(q>0){    //有定性因子
+                    if(maxOfQi(qi)>0){    //有定性因子
                         System.out.println("正交设计");
                         if(isEqualOfVi(vi)){    //因子水平数相等
                             System.out.println("等水平");
@@ -142,11 +144,11 @@ public class MainControl {
                             mixLeavel(vi);  //混合水平
                         }
                     }else{
-                        System.out.println("回归分析");//有  需要改
+                        System.out.println("回归分析");
                         if(regressionType==1) {
                             regressionAnalysisOnce(m, f1, range);
                         }else if(regressionType==2){
-
+                            regressionAnalysisTwice(m,f1);
                         }
                     }
                 }
@@ -193,7 +195,7 @@ public class MainControl {
         engine.assign("c2",range);
         String  order="myfun("+m+","+f1+",c2)";
         REXP rexp = engine.eval(order);
-        System.out.println(order);
+       // System.out.println(order);
 
         RUtils.printRegressionAnalysisData(rexp,range);
 
@@ -268,6 +270,7 @@ public class MainControl {
             System.out.println("大于32个水平");
         }
         REXP rexp = engine.eval(order);
+        //System.out.println(rexp);
         RUtils.printRreturnData(rexp);
     }
     /**
@@ -435,6 +438,19 @@ public class MainControl {
             if (k[i]<min)
                 min=k[i];
         return min;
+    }
+
+    /**
+     * 找qi的最大值
+     * @param k
+     * @return
+     */
+    public static int maxOfQi(int []k){
+        int max=k[0];
+        for(int i=0;i<k.length;i++)
+            if (k[i]>max)
+                max=k[i];
+        return max;
     }
     /**
      * 判断是否是等因子

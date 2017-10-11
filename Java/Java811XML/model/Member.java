@@ -1,4 +1,4 @@
-package WORK.Java.Java811XML.model;
+package Java.Java811XML.model;
 
 import org.dom4j.Element;
 

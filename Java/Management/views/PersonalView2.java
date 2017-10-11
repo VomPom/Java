@@ -1,7 +1,7 @@
-package WORK.Java.Management.views;
+package Java.Management.views;
 
-import WORK.Java.Management.bean.Person;
-import WORK.Java.Management.listener.PersonalViewListener;
+import Java.Management.bean.Person;
+import Java.Management.listener.PersonalViewListener;
 
 import java.awt.Color;
 import java.awt.Dimension;

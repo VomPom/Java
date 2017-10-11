@@ -1,11 +1,11 @@
-package WORK.Java.Management.personalmanager.frame;
+package Java.Management.personalmanager.frame;
 
-import WORK.Java.Management.personalmanager.dao.ManagerDao;
-import WORK.Java.Management.personalmanager.listener.MainListener;
-import WORK.Java.Management.personalmanager.listener.MouseListener;
-import WORK.Java.Management.personalmanager.model.Manager;
-import WORK.Java.Management.personalmanager.model.Person;
-import WORK.Java.Management.personalmanager.util.MyUtil;
+import Java.Management.personalmanager.dao.ManagerDao;
+import Java.Management.personalmanager.listener.MainListener;
+import Java.Management.personalmanager.listener.MouseListener;
+import Java.Management.personalmanager.model.Manager;
+import Java.Management.personalmanager.model.Person;
+import Java.Management.personalmanager.util.MyUtil;
 
 import java.awt.BorderLayout;
 import java.sql.SQLException;

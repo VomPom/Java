@@ -1,4 +1,4 @@
-package WORK.Java.Management.personalmanager.util;
+package Java.Management.personalmanager.util;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -9,7 +9,8 @@ import java.util.List;
 
 import javax.swing.JTable;
 
-import WORK.Java.Management.personalmanager.model.Person;
+
+import Java.Management.personalmanager.model.Person;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;

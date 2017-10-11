@@ -1,4 +1,4 @@
-package WORK.Java.Java719Base;
+package Java.Java719Base;
 
 /**
  * Created by Julis on 17/7/19.

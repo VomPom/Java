@@ -1,5 +1,5 @@
-package WORK.Java.Management.data;
-import WORK.Java.Management.bean.Person;
+package Java.Management.data;
+import Java.Management.bean.Person;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -132,11 +132,6 @@ public class DataAndXML {
 
 
     }
-
-
-
-
-
 
 
 }

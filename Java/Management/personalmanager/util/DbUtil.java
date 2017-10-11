@@ -1,4 +1,4 @@
-package WORK.Java.Management.personalmanager.util;
+package Java.Management.personalmanager.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

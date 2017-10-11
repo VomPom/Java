@@ -1,0 +1,48 @@
+myfunbd<-function(b,v){
+  Resultdata<-data.frame(block=factor(rep(1:b,each=v)),treat=factor(rep(1:v)))
+  return(Resultdata)
+}
+Resultdata<-myfunbd(b=5,v=4)
+Resultdata$y<-c(73,73,75,75,69,68,72,72,73,74,74,77,71,72,73,75,67,69,68,72)
+Resultdata$treat<-as.numeric(Resultdata$treat)
+Resultdata$block<-as.numeric(Resultdata$block)
+
+
+####CBD方差分析###
+###  各水平重复次数，alpha为置信度，effect=0表示固定效应，effect=1表示随机效应  ###
+myfunBlockVarAnalysis<-function(fileURL,m,alpha,effect){
+  Resultdata<-read.csv(fileURL,header = TRUE)
+  Resultdata$treat<-as.factor(Resultdata$treat)
+  Resultdata$block<-as.factor(Resultdata$block)
+  lm<-lm(y~treat+block,data=Resultdata)
+  aov<-aov(y~treat+block,data=Resultdata)
+  saov<-anova(lm)
+  mean<-aggregate(Resultdata[,3],list(treat=Resultdata$treat),FUN = "mean")
+  n<-length(Resultdata$y)
+  r<-max(as.numeric(Resultdata$treat))
+  M<-matrix(0,3,r)
+  M[1,]<-mean$x
+  for(i in 1:r){
+    M[2,i]<-mean$x[i]-qt(1-alpha/2,n-r)*sqrt(saov$`Mean Sq`[3]/m)
+    M[3,i]<-mean$x[i]+qt(1-alpha/2,n-r)*sqrt(saov$`Mean Sq`[3]/m)
+  }
+  rownames(M)<-c("水平均值","区间下限","区间上限")
+  if(effect==0){
+    HSD<-TukeyHSD(aov,ordered = F,conf.level = 0.05)
+    HSD<-HSD$treat
+    biao<-list(多重比较=HSD,水平均值及区间估计=M,方差分析=saov)
+  }else if(effect==1){
+    n0<-(n-r*(m^2)/n)/(r-1)
+    sigma2<-saov$`Mean Sq`[2]+saov$`Mean Sq`[3]
+    sigmaA2<-(saov$`Mean Sq`[1]-sigma2)/n0
+    biao<-list(水平方差=sigmaA2,试验误差的方差=sigma2,总方差估计值=(sigma2+sigmaA2),方差分析=saov)
+  }
+  return(biao)
+}
+myfunBlockVarAnalysis(Resultdata,m=5,alpha=0.05,effect=0)
+
+
+
+
+
+

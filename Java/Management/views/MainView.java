@@ -1,9 +1,9 @@
-package WORK.Java.Management.views;
+package Java.Management.views;
 
-import WORK.Java.Management.bean.Person;
-import WORK.Java.Management.data.PersonDao;
-import WORK.Java.Management.listener.MainListener;
-import WORK.Java.Management.listener.TableHeaderListener;
+import Java.Management.bean.Person;
+import Java.Management.data.PersonDao;
+import Java.Management.listener.MainListener;
+import Java.Management.listener.TableHeaderListener;
 
 import java.awt.*;
 import java.sql.SQLException;

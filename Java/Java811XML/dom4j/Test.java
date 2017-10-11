@@ -1,6 +1,7 @@
-package WORK.Java.Java811XML.dom4j;
+package Java.Java811XML.dom4j;
 
-import WORK.Java.Java811XML.model.Member;
+
+import Java.Java811XML.model.Member;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;

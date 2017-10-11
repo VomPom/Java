@@ -1,13 +1,13 @@
-package WORK.Java.Management.personalmanager.listener;
+package Java.Management.personalmanager.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JTable;
 
-import WORK.Java.Management.personalmanager.dao.PersonDao;
-import WORK.Java.Management.personalmanager.frame.EditFrame;
-import WORK.Java.Management.personalmanager.util.MyUtil;
+import Java.Management.personalmanager.dao.PersonDao;
+import Java.Management.personalmanager.frame.EditFrame;
+import Java.Management.personalmanager.util.MyUtil;
 
 public class EditListener implements ActionListener {
 

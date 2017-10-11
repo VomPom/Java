@@ -1,9 +1,9 @@
-package WORK.Java.Management.listener;
+package Java.Management.listener;
 
-import WORK.Java.Management.bean.Person;
-import WORK.Java.Management.data.PersonDao;
-import WORK.Java.Management.views.MainView;
-import WORK.Java.Management.views.PersonalView;
+import Java.Management.bean.Person;
+import Java.Management.data.PersonDao;
+import Java.Management.views.MainView;
+import Java.Management.views.PersonalView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

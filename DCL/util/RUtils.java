@@ -52,6 +52,7 @@ public class RUtils {
                 int size=rexpTemp.asDoubleArray().length;
                 data[i]=new double[size];
                 for(int h=0;h<size;h++){
+
                     data[i][h]=tempData[h] ;
                 }
             }
@@ -60,24 +61,19 @@ public class RUtils {
 
         int count=1;
         int length=data[0].length;
+
         for(int j=0;j<length;j++){
             System.out.print(String.format("%4d",count++));
             for(int i=0;i<data.length;i++) {
-//                if(data[i][j]==1){
-//                    System.out.print(String.format("%8.2f", data[i][j])+"|"+range[i]);
-//                }else if(data[i][j]==-1){
-//                    System.out.print(String.format("%8.2f", data[i][j])+"|"+range[i+1]);
-//                }else if(data[i][j]==0){
-//                    System.out.print(String.format("%8.2f", data[i][j])+"|"+(range[i+1]+range[i])/2);
-//                }else{
-//                    System.out.print(String.format("%8.2f", data[i][j]));
-//                }
+
                 if(data[i][j]==1){
-                    System.out.print(String.format("%8.2f", range[i]));
+                    double q3=(3*range[2*i]+range[2*i+1])/4;//因子编码值big的。
+                    System.out.print(String.format("%8.2f", q3));
                 }else if(data[i][j]==-1){
-                    System.out.print(String.format("%8.2f", range[i+1]));
+                    double q1=(range[2*i]-range[2*i+1])/4;//因子编码值小的。
+                    System.out.print(String.format("%8.2f", q1));
                 }else if(data[i][j]==0){
-                    System.out.print(String.format("%8.2f", (range[i+1]+range[i])/2));
+                    System.out.print(String.format("%8.2f", (range[2*i+1]+range[2*i])/2));
                 }else{
                     System.out.print(String.format("%8.2f", data[i][j]));
                 }
@@ -236,6 +232,7 @@ public class RUtils {
         String tempPath= FileUtils.getNowFilePath();
         // R文件全路径
         String filePath = tempPath+"/src/DCL/rData/"+fileName;
+        System.out.println(filePath);
         // 初始化R解析类
         Rengine engine=new Rengine (new String [] {"--vanilla"}, false, null);
         // 等待解析类初始化完毕

@@ -1,6 +1,6 @@
-package WORK.Java.Java811XML.dataBastToxml;
+package Java.Java811XML.dataBastToxml;
 
-import WORK.Java.Java811XML.model.Member;
+import Java.Java811XML.model.Member;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -17,7 +17,7 @@ public class Test {
     public static void main(String []args) throws TransformerException, ParserConfigurationException {
         ArrayList<Member> members=new ArrayList<>();
         members=getList();
-        WORK.Java.Java811XML.dom.Test.write(members);
+        Java.Java811XML.dom.Test.write(members);
     }
 
     public static Connection getConnectino(){

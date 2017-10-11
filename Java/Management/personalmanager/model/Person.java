@@ -1,4 +1,4 @@
-package WORK.Java.Management.personalmanager.model;
+package Java.Management.personalmanager.model;
 
 public class Person {
 

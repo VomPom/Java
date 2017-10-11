@@ -1,7 +1,7 @@
-package WORK.Java.Management.personalmanager.test;
+package Java.Management.personalmanager.test;
 
 
-import WORK.Java.Management.personalmanager.frame.LoginFrame;
+import Java.Management.personalmanager.frame.LoginFrame;
 
 public class ManagerTest {
 

@@ -1,8 +1,8 @@
-package WORK.Java.Management.personalmanager.util;
+package Java.Management.personalmanager.util;
 
-import WORK.Java.Management.personalmanager.dao.PersonDao;
-import WORK.Java.Management.personalmanager.frame.EditFrame;
-import WORK.Java.Management.personalmanager.model.Person;
+import Java.Management.personalmanager.dao.PersonDao;
+import Java.Management.personalmanager.frame.EditFrame;
+import Java.Management.personalmanager.model.Person;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

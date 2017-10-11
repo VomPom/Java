@@ -1,4 +1,4 @@
-package WORK.Java.Management.bean;
+package Java.Management.bean;
 
 /**
  * Created by Julis on 17/8/17.

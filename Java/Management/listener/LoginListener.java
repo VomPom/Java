@@ -1,7 +1,7 @@
-package WORK.Java.Management.listener;
+package Java.Management.listener;
 
-import WORK.Java.Management.views.LoginView;
-import WORK.Java.Management.views.MainView;
+import Java.Management.views.LoginView;
+import Java.Management.views.MainView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

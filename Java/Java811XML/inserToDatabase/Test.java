@@ -1,6 +1,6 @@
-package WORK.Java.Java811XML.inserToDatabase;
+package Java.Java811XML.inserToDatabase;
 
-import WORK.Java.Java811XML.model.Member;
+import Java.Java811XML.model.Member;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,7 +22,7 @@ public class Test {
 
     public static void main(String []args) throws IOException, SAXException, ParserConfigurationException, SQLException {
         ArrayList<Member> readMembers=new ArrayList<>();
-        readMembers= WORK.Java.Java811XML.dom.Test.read();
+        readMembers=Java.Java811XML.dom.Test.read();
         System.out.println("Dom读取xml成功");
         System.out.println(readMembers.size());
         insertData(readMembers);

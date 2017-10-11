@@ -1,0 +1,30 @@
+
+
+###单因子正态性检验###
+myfunnormaltest<-function(fileURL){
+   Resultdata<-read.csv(fileURL,header = TRUE)
+  for(j in unique(Resultdata$treat)){
+    q<-list()
+    T <- subset(Resultdata,Resultdata$treat == j)
+    R <- shapiro.test(T$y)
+    test<-list(R)
+    names(test)<-c(paste("第",j,"个处理的正态性检验"))
+    table<-c(q,test)
+    print(table)
+  }
+}
+
+
+###单因子方差齐性检验###
+Resultdata<-myfunbd(b=3,v=4)
+Resultdata$y<-rep(1:12)
+
+myfunSHtest<-function(Resultdata){
+  bar<-bartlett.test(y~treat,data = Resultdata)
+  if(bar$p.value<0.05) c<-c("不满足方差齐性，进行极差法分析")
+  else c<-c("满足方差齐性，可以进行方差分析")
+  result<-list("方差齐性检验"=bar,"分析结果"=c)
+  return(result)
+}
+
+myfunSHtest(Resultdata = Resultdata)
