@@ -1,7 +1,5 @@
 package WORK.Java.DCL.UI;
 
-import DCL.UI.SingleInputFrame;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

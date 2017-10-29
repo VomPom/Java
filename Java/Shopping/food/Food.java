@@ -1,4 +1,4 @@
-package WORK.Java.Shopping.food;
+package Java.Shopping.food;
 
 /**
  * Created by Julis on 17/7/29.

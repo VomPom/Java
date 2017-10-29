@@ -6,9 +6,8 @@ import org.rosuda.JRI.Rengine;
 
 public class Analysis {
     public static void main(String[]args){
-        //BIBDAnalysis(0);
-       // CBDAnalysis(5, 0.05,0);
-        NormalTest();
+
+
     }
     /**
      *  单因子正态性检验

@@ -168,6 +168,7 @@ public class MainControl {
         RUtils.printRreturnData(rexp);
     }
     /**
+     * 
      * 二次回归分析
      * @param m 重复试验次数
      * @param f1 因子个数

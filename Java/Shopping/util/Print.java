@@ -1,6 +1,6 @@
-package WORK.Java.Shopping.util;
+package Java.Shopping.util;
 
-import WORK.Java.Shopping.food.Food;
+import Java.Shopping.food.Food;
 
 /**
  * Created by Julis on 17/7/29.

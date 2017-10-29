@@ -1,10 +1,10 @@
-package WORK.Java.Shopping;
+package Java.Shopping;
 
-import WORK.Java.Shopping.food.*;
-import WORK.Java.Shopping.person.Customer;
-import WORK.Java.Shopping.person.Father;
-import WORK.Java.Shopping.person.Son;
-import WORK.Java.Shopping.util.Print;
+import Java.Shopping.food.*;
+import Java.Shopping.person.Customer;
+import Java.Shopping.person.Father;
+import Java.Shopping.person.Son;
+import Java.Shopping.util.Print;
 
 import java.util.Scanner;
 

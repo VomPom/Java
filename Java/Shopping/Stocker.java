@@ -1,4 +1,6 @@
 package Java.Shopping;
+
+
 import Java.Shopping.food.Food;
 import Java.Shopping.util.Print;
 
@@ -11,7 +13,7 @@ import java.util.Scanner;
  * Date:17/7/29
  * Time:下午3:21
  */
-public class Stocker extends Shop{
+public class Stocker extends Shop {
 
     private String name;
     private Food[] foods;

@@ -1,8 +1,8 @@
-package WORK.Java.Shopping;
+package Java.Shopping;
 
-import WORK.Java.Shopping.food.Food;
-import WORK.Java.Shopping.person.Customer;
-import WORK.Java.Shopping.util.Print;
+import Java.Shopping.food.Food;
+import Java.Shopping.person.Customer;
+import Java.Shopping.util.Print;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

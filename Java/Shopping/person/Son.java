@@ -1,6 +1,6 @@
-package WORK.Java.Shopping.person;
+package Java.Shopping.person;
 
-import WORK.Java.Shopping.person.Father;
+import Java.Shopping.person.Father;
 
 /**
  * Created by Julis on 17/7/29.
