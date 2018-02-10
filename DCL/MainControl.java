@@ -19,11 +19,10 @@ public class MainControl {
     public static void main(String []args){
         //new MainFrame();套
         //blockDesignMatrix(5,2,10);
-        Rengine engine=new Rengine (new String [] {"--vanilla"}, false, null);
-        REXP x=engine.eval("1:10");
 
-        System.out.println("REXP result = "+x);
-        // mainJudge();
+
+       // System.out.println("REXP result = "+x);
+         mainJudge();
         //chainArea(32,2,5,8);
         // int []iv={3,2,2,2,2,3};
         //CBD(3,2);
@@ -43,14 +42,14 @@ public class MainControl {
          /**
          *  f1 f2 f3  相关数据设计
          */
-         int []vi={3,3,3,2,2};//f1 每个因子的水平
+         int []vi={3,3,3,2,2};//f1     每个因子的水平
          int v=vi[0];//水平数   单因子的话 就一个,多因子 v1 v2 v3 f1
 
          int f1=vi.length;  //可控因子水平个数
          int []viF2={}; //噪声因子的水平数目 f2 每个因子的水平
          int []viF3={}; //信号因子的水平数目 f3 每个因子的水平
          int f3=viF3.length;    //信号因子个数
-         int f2=viF2.length+f3; //噪声因子个数
+         int f2=viF2 .length+f3; //噪声因子个数
          double[]range=new double[]{200,50,30,10,1.66,0.58,0.7,0.3,2.5,-2.5};
 
          int l=0;   //随机效应
@@ -70,6 +69,7 @@ public class MainControl {
              if (m >= 2) {
                 System.out.println("链式法则");
                 chainArea(n,b,v,k);
+
                 /**
                  * 链式法则
                  *
@@ -110,12 +110,13 @@ public class MainControl {
                     }
                 }
             }
-        }else if(f1>=2){
+        }else if(f1 >= 2){//多因子
             if(f1>7) {
                 System.out.println("筛选代码块");    //饱和设计
                 saturationDesign(f1);
                 return;
             }
+
             if(f2>0){
                 System.out.println("参数设计");
                 if(f3>0){
@@ -161,6 +162,9 @@ public class MainControl {
      * @param countOfF2 2水平因子个数
      * @param countOfF3 3水平因子个数
      */
+
+
+
     public static void idleColcum(int countOfF2,int countOfF3){
         Rengine engine=RUtils.loadR("idleColcum.R");
         String  order="myfunfx("+countOfF2+","+countOfF3+")";
@@ -168,7 +172,7 @@ public class MainControl {
         RUtils.printRreturnData(rexp);
     }
     /**
-     * 
+     *
      * 二次回归分析
      * @param m 重复试验次数
      * @param f1 因子个数
@@ -249,8 +253,8 @@ public class MainControl {
         }else{
             rexp=engine.eval("myfunzj1("+j+","+v+","+f1+")");
         }
-        RUtils.printRreturnDataWithName(rexp);
-       // RUtils.printRreturnData(rexp);
+//        RUtils.printRreturnDataWithName(rexp);
+        RUtils.printRreturnData(rexp);
     }
     /**
      * 饱和设计
@@ -323,11 +327,10 @@ public class MainControl {
         REXP rexp = engine.eval(order);
 
         RUtils.printRreturnData(rexp);
-
-
     }
     /**
      * 调用 2137
+     *
      * @param f1
      * @param f2
      */
@@ -351,7 +354,6 @@ public class MainControl {
         String order="myfunbd("+b+","+v+")";
         REXP rexp = engine.eval(order);
         RUtils.printRreturnData(rexp);
-
     }
     /**
      * 链式设计方案

@@ -1,13 +1,11 @@
-package WORK.Java.DCL;
+package DCL;
 
 import DCL.bean.MixLeavelData;
 import DCL.util.ExcelUtils;
 import DCL.util.RUtils;
-import org.rosuda.JRI.*;
-
-import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
-import java.util.List;
+import org.rosuda.JRI.REXP;
+import org.rosuda.JRI.RVector;
+import org.rosuda.JRI.Rengine;
 
 
 /**
@@ -18,151 +16,254 @@ import java.util.List;
  * Time:下午2:56
  */
 
-public class MainControl {
-
-
+public class MainControlCopy {
     public static void main(String []args){
 
-        //new MainFrame();
-       // blockDesignMatrix(5,2,10);
-       // mainJudge();
-        //chainArea(32,2,5,8);
-//        int []iv={3,2,2,2,2,3};
-//        parameterDesign(iv);
-       // saturationDesign(20);
-//        double[]list=new double[]{130,70,0.5,2.0,0.05,0.1,500,1500};
-//        regressionAnalysis(4,4,list);
+//         mainJudge();
+//        mixture(3,2);
+        constrmixture();
 }
-
     /**
      * 主判断程序主要根据对vkb等相关参数
      */
+
     public static void mainJudge(){
-         int b=2;//区组数
-         int []ki={8,5,8,7,9};//每个区的数
+         int b=1;//区组数
+         int []ki={3,1,2,3};//每个区的数
          int k=minOfK(ki);//每个区的最小的容纳水平数
-        /**
+         /**
          *  f1 f2 f3  相关数据设计
          */
+         int []viF1={3,3,3,2,2};//f1     每个因子的水平
+         int v=viF1[0];//水平数   单因子的话 就一个,多因子 v1 v2 v3 f1
+
+         int f1=viF1.length;  //可控因子水平个数
+         int []viF2={}; //噪声因子的水平数目 f2 每个因子的水平
+         int []viF3={}; //信号因子的水平数目 f3 每个因子的水平
+         int f3=viF3.length;    //信号因子个数
+         int f2=viF2.length+f3; //噪声因子个数
+         double[]range=new double[]{200,50,30,10,1.66,0.58,0.7,0.3,2.5,-2.5};
 
 
-         int []vi={3,3,3};//f1 每个因子的水平
-         int v=vi[0];//水平数   单因子的话 就一个,多因子 v1 v2 v3 f1
-        // int f1=vi.length;//可控因子
-         int f1=18;
-         int []viF2={2,2};//噪声因子的水平数目 f2 每个因子的水平
-         int []viF3={2};//噪声因子的水平数目 f3 每个因子的水平
-         int f3=viF3.length;//信号因子i
-         int f2=viF2.length+f3;//噪声因子
-
-
-
-         int l=0;//随机效应
-         int lamda=0;//相遇数
-         int cost=1;//成本
-         int q=1;//定性1 定量0
-         int z=0;//是否可以综合
-         int n=21;//根据实验条件获取
-         int j=0;//交互作用的类型
-         int f=f1+f2+f3;//总因子数
+         int l=0;   //随机效应
+         int lamda=0;   //相遇数
+         int cost=1;    //成本
+         int []qi={1,0,1,0,0};  //定性1 定量0 和vi'的个数相对应
+         int z=0;   //是否可以综合噪声 0没综合
+         int n=21;  //根据实验条件获取
+         int j=0;   //交互作用的类型
+         int f=f1+f2+f3;    //总因子数
          int m=v/b;
+         int regressionType=1;  //1代表 一次回归分析,2代表 2次分析,
+         int t=0;   //数据特性   0 望目 －1 望小 1望大
 
-        if(f1==1) {//单因子
-            if (m >= 2) {
+        /*碰到定性离散化
+        范围A-B
+        定性的最小的水平数：m
+        */
+
+//        int A=0,B=0;
+//        switch(m){
+//            case 2:
+//                break;
+//            case 3:
+//                int q1=A+(B-A)/4;
+//                int q2=A+(B-A)/4;
+//                int q3=A+(B-A)/4;
+//                break;
+//            case 4:
+//                break;
+//        }
+
+
+
+        switch (cost){
+            case 0:
+            case 1:
+                break;
+            case 2:
+                //均匀设计
+                break;
+
+        }
+         if(f1 == 1) {//单因子
+             if (m >= 2) {
                 System.out.println("链式法则");
                 chainArea(n,b,v,k);
-                /**
-                 * 链式法则
-                 *
-                 * 1\产生随即表 ok?
-                 * 2\方差分析
-                 *
-                 * ?????
-                 * n和书上的n不一样代表的东西不一样1
-                 */
-            } else {
-                if (k == v) {
-                    CBD(b,v);
-                } else {
-                     //System.out.println("BIBD");
-                    if (b >= v) {
-                        int rInt=(b * k) / v;//处理的重复数
-                        int rJudge = (b * k) % v;
-                        if (rJudge == 0) {
-                            lamda = (rInt * (k - 1)) % (v - 1);
-//                            int temp = (rInt * (k - 1)) / (v - 1);
-//                            System.out.println(temp);
-//                            System.out.println("r="+rInt);
-                            if (lamda == 0) {
-//                                if (temp == 1) {
-//                                    System.out.println("根据vbk设定试验方案");//根据文件夹 试验方案表
-                                    blockDesignMatrix(v,k,b);
-//                                } else {
-//                                    CBD(b,v);
-//                               }
-                            } else {
-                                CBD(b,v);
-                            }
-                        } else {
-                            CBD(b,v);
-                        }
-                    } else {
-                        CBD(b,v);
+                return;
+            }
+         /**
+          * 链式法则
+          */
+            if (k == v) {
+                CBD(b,v);
+                return;
+            }
+            if (b >= v) {
+                int rInt=(b * k) / v;//处理的重复数
+                int rJudge = (b * k) % v;
+                if (rJudge == 0) {
+                    lamda = (rInt * (k - 1)) % (v - 1);
+                    if (lamda == 0) {
+                        blockDesignMatrix(v,k,b);
+                        return;
                     }
                 }
             }
-        }else if(f1>=2){
-            if(f1>7) {
+            CBD(b,v);
+            return;
+        }else if(f1 >= 2){//多因子
+
+             if(f1>7) {
                 System.out.println("筛选代码块");    //饱和设计
                 saturationDesign(f1);
                 return;
             }
+
             if(f2>0){
                 System.out.println("参数设计");
                 if(f3>0){
                     System.out.println("动态设计");
-                    parameterDesign(f1,vi[0],f2,viF2[0]);//一般参数设计
-                }else{
-                    if(z==1){
-                        System.out.println("综合噪声");
-                        syntheticNoise(f1,v);//综合噪声
-                    }else{
-                        System.out.println("一般参数设计");
-                        parameterDesign(f1,vi[0],f2,viF2[0]);//一般参数设计
-                    }
+                    parameterDesign(f1,viF1[0],f2,viF2[0]);//一般参数设计
+                    return;
                 }
-            }else{
+                if(z==1){
+                    System.out.println("综合噪声");
+                    syntheticNoise(f1,v);//综合噪声
+                    return;
+                }
+                    System.out.println("一般参数设计");
+                    parameterDesign(f1,viF1[0],f2,viF2[0]);//一般参数设计
+                    return;
+            }
 
-                System.out.println("成本分析"); //人工处理
-                System.out.println("时间和金钱成本");
-                    if(q>0){    //有定性因子
-                        System.out.println("正交设计");
-                        if(isEqualOfVi(vi)){    //因子水平数相等
-                            System.out.println("等水平");
-                                orthogonal(j,v,f1,cost);//标准正交表
-                        }else{  //因子水平数不相等==>混合水平
-                            System.out.println("混合水平");
-                            mixLeavel(vi);  //混合水平
-                        }
-                    }else{
-                        System.out.println("回归分析");//有  需要改
+            System.out.println("成本分析"); //人工处理
+            System.out.println("时间和金钱成本");
+                if(maxOfQi(qi)>0){    //有定性因子
+                    System.out.println("正交设计");
+                    if(isEqualOfVi(viF1)){    //因子水平数相等
+                        System.out.println("等水平");
+                        orthogonal(j,v,f1,cost);//标准正交表
+                        return;
                     }
+                    //因子水平数不相等==>混合水平
+                        System.out.println("混合水平");
+                        mixLeavel(viF1);  //混合水平
+                        return;
                 }
+                    System.out.println("回归分析");
+                    switch (regressionType){
+                        case 1:
+                            regressionAnalysisOnce(m, f1, range);
+                            break;
+                        case 2:
+                            regressionAnalysisTwice(m,f1);
+                            break;
+                        default:
+                            System.out.println("Not Found");
+                            break;
+                    }
+                    return;
             }
         }
 
 
+    public static void constrmixture(){
+
+//        Rengine engine=RUtils.loadR("constrmixture.R");
+//        String  order="constrmixture1("+"c(0,0.8,0.1,0.95, 0.05,0.50)"+","+2+","+3+","+2+")";
+//        System.out.println(order);
+//        REXP rexp = engine.eval(order);
+//        System.out.println(rexp);
+//        RUtils.printRreturnData(rexp);
+
+//
+//        Rengine engine=RUtils.loadR("constrmixture.R");
+//        String  order="constrmixture3("+"c(0,0.8,0.1,0.95, 0.05,0.50)"+","+2+","+3+","+2+","+2+")";
+//        System.out.println(order);
+//        REXP rexp = engine.eval(order);
+//        System.out.println(rexp);
+//        RUtils.printREAL(rexp);
+
+
+
+        Rengine engine=RUtils.loadR("constrmixture.R");
+        String  order="constrmixture3("+"c(0,0.8,0.1,0.95, 0.05,0.50)"+","+2+","+3+","+2+","+2+")";
+        System.out.println(order);
+        REXP rexp = engine.eval(order);
+        System.out.println(rexp);
+        RUtils.printREAL(rexp);
+    }
+    public static void mixture(int k,int q){
+
+
+        Rengine engine=RUtils.loadR("mixture.R");
+//        RVector vector=new RVector();
+//        vector.add(0.2);
+//        vector.add(0.2);
+//        vector.add(0.2);
+//        String  order="lowergriddesign("+k+","+q+",c(0.2, 0.2, 0.2)"+")";
+//        System.out.println(order);
+//        REXP rexp = engine.eval(order);
+//        RUtils.printREAL(rexp);
+
+
+
+    }
+
+    /**
+     * 赋闲列
+     * @param countOfF2 2水平因子个数
+     * @param countOfF3 3水平因子个数
+     */
+
+    public static void idleColcum(int countOfF2,int countOfF3){
+        Rengine engine=RUtils.loadR("idleColcum.R");
+        String  order="myfunfx("+countOfF2+","+countOfF3+")";
+        REXP rexp = engine.eval(order);
+        RUtils.printRreturnData(rexp);
+    }
+    /**
+     * 二次回归分析
+     * @param m 重复试验次数
+     * @param f1 因子个数
+     */
+    public static void regressionAnalysisTwice(int m,int f1){
+
+        Rengine engine=RUtils.loadR("regressionAnalysisTwice.R");
+
+        String  order="myfun("+m+","+f1+")";
+        REXP rexp = engine.eval(order);
+
+       RUtils.printRegressionAnalysisData(rexp,new double[]{});
+
+    }
+    /**
+     * 一次回归分析
+     * @param m 重复试验次数
+     * @param f1 因子个数
+     * @param range 取值范围
+     */
+    public static void regressionAnalysisOnce(int m,int f1,double[]range){
+
+        Rengine engine=RUtils.loadR("regressionAnalysis.R");
+        engine.assign("c2",range);
+        String  order="myfun("+m+","+f1+",c2)";
+        REXP rexp = engine.eval(order);
+
+
+        RUtils.printRegressionAnalysisData(rexp,range);
+
+    }
     /**
      * 综合噪声
      * @param f1
      * @param v
      */
     public static void syntheticNoise(int f1,int v){
-
         Rengine engine=RUtils.loadR("syntheticNoise.R");
         String  order="myfunzh("+f1+","+v+")";
         REXP rexp = engine.eval(order);
-
         RUtils.printRreturnData(rexp);
     }
     /**
@@ -186,7 +287,6 @@ public class MainControl {
     public static void blockDesignMatrix(int v,int k,int b)  {
         ExcelUtils.printVKBDesign(v,k,b);
     }
-
     /**
      * 正交设计
      * @param f1 可控因子个数
@@ -196,23 +296,20 @@ public class MainControl {
     public static void orthogonal(int j,int v,int f1,int cost){
         Rengine engine=RUtils.loadR("Orthogonal.R");
         REXP rexp=null;
-        System.out.println(cost);
+
         if(cost==1){
             rexp=engine.eval("myfunzj("+j+","+v+","+f1+")");
         }else{
             rexp=engine.eval("myfunzj1("+j+","+v+","+f1+")");
         }
-//        System.out.println("j="+j+"v="+v+"f1="+f1);
-//        System.out.println(rexp);
+
         RUtils.printRreturnData(rexp);
     }
-
     /**
      * 饱和设计
      * @param f1
      */
     public static void saturationDesign(int f1){
-
         Rengine engine=RUtils.loadR("SaturationDesign.R");
         String order=null;
         if(f1<12){
@@ -227,22 +324,21 @@ public class MainControl {
             System.out.println("大于32个水平");
         }
         REXP rexp = engine.eval(order);
-
-
+        //System.out.println(rexp);
         RUtils.printRreturnData(rexp);
-
     }
     /**
      * 混合水平
-     * @param vi
+     * @param vi 各个因子的水平数组
      */
     public static void mixLeavel(int []vi){
         int []leavelCount=leavelJudge(vi);//获取到各个水平的数量
-        int twoLeavels=leavelCount[2]-1;//二水平数组索引
-        int threeLeavels=leavelCount[3]-1;//三水平数组索引
-        int getTypeOfMixLeavel=MixLeavelData.table[threeLeavels][twoLeavels];//获取判断的类型
-        System.out.println();
-        switch (getTypeOfMixLeavel){
+        int twoLeavelsPostion=leavelCount[2]-1;//二水平数组索引
+        int threeLeavelsPostion=leavelCount[3]-1;//三水平数组索引
+        System.out.println(twoLeavelsPostion+"  "+threeLeavelsPostion);
+         int TYPE_OF_MIXLEAVE=MixLeavelData.table[threeLeavelsPostion][twoLeavelsPostion];//获取判断的类型
+
+        switch (TYPE_OF_MIXLEAVE){
             case 0:
                 System.out.println("没有此方法");
                 break;
@@ -252,18 +348,18 @@ public class MainControl {
                 break;
             case 2:
                 System.out.println("赋闲列方法");
+                idleColcum(leavelCount[2],leavelCount[3]);//赋闲列方法
                 break;
             case 3:
                 System.out.println("原表不变");
                 pseudo2137(leavelCount[2]+leavelCount[3],leavelCount[3]);
-
+                break;
+            default:
+                System.out.println("混合设计不存在的选项");
                 break;
         }
 
-
     }
-
-
     /**
      * 调用拟水平方法
      * @param vi
@@ -280,11 +376,10 @@ public class MainControl {
         REXP rexp = engine.eval(order);
 
         RUtils.printRreturnData(rexp);
-
-
     }
     /**
      * 调用 2137
+     *
      * @param f1
      * @param f2
      */
@@ -308,7 +403,6 @@ public class MainControl {
         String order="myfunbd("+b+","+v+")";
         REXP rexp = engine.eval(order);
         RUtils.printRreturnData(rexp);
-
     }
     /**
      * 链式设计方案
@@ -396,6 +490,19 @@ public class MainControl {
             if (k[i]<min)
                 min=k[i];
         return min;
+    }
+
+    /**
+     * 找qi的最大值
+     * @param k
+     * @return
+     */
+    public static int maxOfQi(int []k){
+        int max=k[0];
+        for(int i=0;i<k.length;i++)
+            if (k[i]>max)
+                max=k[i];
+        return max;
     }
     /**
      * 判断是否是等因子

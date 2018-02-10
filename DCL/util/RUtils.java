@@ -16,6 +16,9 @@ import java.io.*;
  * Time:下午9:22
  */
 public class RUtils {
+
+
+
     /**
      * 打印回归分析的结果
      * 这里的打印结果和其他的打印有差异,所以这里单独罗列输出结构
@@ -88,95 +91,95 @@ public class RUtils {
      * 打印R执行返回结果
      * @param rexp
      */
-    public static void printRreturnDataWithName(REXP rexp){
-
-        /**
-         * 读取返回结果,并转换为java数据结构
-         */
-        RList list = rexp.asList();
-        // 解析rexp对象，转换数据格式
-        String[] key = list.keys();
-        if(key != null){
-            int i = 0;
-            while (i < key.length){
-                i++;
-            }
-        }
-        System.out.println("\n\n==============试验计划表================");
-        System.out.println("======================================");
-        System.out.print("序号");
-        for(int i=0;i<key.length;i++){
-
-            if(key[i].equals("A")){
-                System.out.print(String.format("%5s","粉炭灰"));
-            }else if(key[i].equals("B")){
-                System.out.print(String.format("%5s","生石灰"));
-            }else if(key[i].equals("C")){
-                System.out.print(String.format("%6s","炉渣"));
-            }else if(key[i].equals("D")){
-                System.out.print(String.format("%7s","不锈钢渣"));
-            }
-
-        }
-        System.out.println();
-
-        RVector vector =  rexp.asVector();
-        int [][]cbdData=new int[vector.size()][];
-        for(int i=0; i<vector.size(); i++){
-            REXP rexpTemp = (REXP) vector.get(i);
-            if(REXP.INTSXP == rexpTemp.rtype){
-                RFactor factor=rexpTemp.asFactor();
-                cbdData[i]=new int[factor.size()];
-                for(int h=0;h<factor.size();h++){
-                    cbdData[i][h]=Integer.parseInt(factor.at(h));
-                }
-            }
-        }
-
-        int count=1;
-        int length=cbdData[0].length;
-        for(int j=0;j<length;j++){
-            System.out.print(String.format("%2d",count++));
-            for(int i=0;i<cbdData.length;i++){
-                if(i==0){
-                    if(cbdData[i][j]==1){
-                        System.out.print(String.format("%8s","40.5%"));
-                    }else if(cbdData[i][j]==2){
-                        System.out.print(String.format("%8s","52.2%"));
-                    }else if(cbdData[i][j]==3){
-                        System.out.print(String.format("%8s","68.5%"));
-                    }
-                }else if(i==1){
-                    if(cbdData[i][j]==1){
-                        System.out.print(String.format("%8s","6.5%"));
-                    }else if(cbdData[i][j]==2){
-                        System.out.print(String.format("%8s","8.2%"));
-                    }else if(cbdData[i][j]==3){
-                        System.out.print(String.format("%8s","12.5%"));
-                    }
-                }else if(i==2){
-                    if(cbdData[i][j]==1){
-                        System.out.print(String.format("%8s","12.5%"));
-                    }else if(cbdData[i][j]==2){
-                        System.out.print(String.format("%8s","15.8%"));
-                    }else if(cbdData[i][j]==3){
-                        System.out.print(String.format("%8s","20.5%"));
-                    }
-                }else if(i==3){
-                    if(cbdData[i][j]==1){
-                        System.out.print(String.format("%8s","15.3%"));
-                    }else if(cbdData[i][j]==2){
-                        System.out.print(String.format("%8s","20.5%"));
-                    }else if(cbdData[i][j]==3){
-                        System.out.print(String.format("%8s","28.0%"));
-                    }
-                }
-
-            }
-            System.out.println();
-        }
-        System.out.println("======================================");
-    }
+//    public static void printRreturnDataWithName(REXP rexp){
+//
+//        /**
+//         * 读取返回结果,并转换为java数据结构
+//         */
+//        RList list = rexp.asList();
+//        // 解析rexp对象，转换数据格式
+//        String[] key = list.keys();
+//        if(key != null){
+//            int i = 0;
+//            while (i < key.length){
+//                i++;
+//            }
+//        }
+//        System.out.println("\n\n==============试验计划表================");
+//        System.out.println("======================================");
+//        System.out.print("序号");
+//        for(int i=0;i<key.length;i++){
+//
+//            if(key[i].equals("A")){
+//                System.out.print(String.format("%5s","粉炭灰"));
+//            }else if(key[i].equals("B")){
+//                System.out.print(String.format("%5s","生石灰"));
+//            }else if(key[i].equals("C")){
+//                System.out.print(String.format("%6s","炉渣"));
+//            }else if(key[i].equals("D")){
+//                System.out.print(String.format("%7s","不锈钢渣"));
+//            }
+//
+//        }
+//        System.out.println();
+//
+//        RVector vector =  rexp.asVector();
+//        int [][]cbdData=new int[vector.size()][];
+//        for(int i=0; i<vector.size(); i++){
+//            REXP rexpTemp = (REXP) vector.get(i);
+//            if(REXP.INTSXP == rexpTemp.rtype){
+//                RFactor factor=rexpTemp.asFactor();
+//                cbdData[i]=new int[factor.size()];
+//                for(int h=0;h<factor.size();h++){
+//                    cbdData[i][h]=Integer.parseInt(factor.at(h));
+//                }
+//            }
+//        }
+//
+//        int count=1;
+//        int length=cbdData[0].length;
+//        for(int j=0;j<length;j++){
+//            System.out.print(String.format("%2d",count++));
+//            for(int i=0;i<cbdData.length;i++){
+//                if(i==0){
+//                    if(cbdData[i][j]==1){
+//                        System.out.print(String.format("%8s","40.5%"));
+//                    }else if(cbdData[i][j]==2){
+//                        System.out.print(String.format("%8s","52.2%"));
+//                    }else if(cbdData[i][j]==3){
+//                        System.out.print(String.format("%8s","68.5%"));
+//                    }
+//                }else if(i==1){
+//                    if(cbdData[i][j]==1){
+//                        System.out.print(String.format("%8s","6.5%"));
+//                    }else if(cbdData[i][j]==2){
+//                        System.out.print(String.format("%8s","8.2%"));
+//                    }else if(cbdData[i][j]==3){
+//                        System.out.print(String.format("%8s","12.5%"));
+//                    }
+//                }else if(i==2){
+//                    if(cbdData[i][j]==1){
+//                        System.out.print(String.format("%8s","12.5%"));
+//                    }else if(cbdData[i][j]==2){
+//                        System.out.print(String.format("%8s","15.8%"));
+//                    }else if(cbdData[i][j]==3){
+//                        System.out.print(String.format("%8s","20.5%"));
+//                    }
+//                }else if(i==3){
+//                    if(cbdData[i][j]==1){
+//                        System.out.print(String.format("%8s","15.3%"));
+//                    }else if(cbdData[i][j]==2){
+//                        System.out.print(String.format("%8s","20.5%"));
+//                    }else if(cbdData[i][j]==3){
+//                        System.out.print(String.format("%8s","28.0%"));
+//                    }
+//                }
+//
+//            }
+//            System.out.println();
+//        }
+//        System.out.println("======================================");
+//    }
 
     public static void printRreturnData(REXP rexp){
 
@@ -248,4 +251,18 @@ public class RUtils {
         return  engine;
     }
 
+    /**
+     * PrintReal
+     */
+    public static void printREAL(REXP rexp){
+        RVector vector=rexp.asVector();
+        for(int i=0;i<vector.size();i++){
+            double[]list=vector.at(i).asDoubleArray();
+            for(int j=0;j<list.length;j++){
+                System.out.print(list[j]+" ");
+            }
+            System.out.println();
+        }
+
+    }
 }

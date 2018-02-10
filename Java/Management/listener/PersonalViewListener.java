@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * Date:17/8/18
  * Time:下午12:29
  */
+
 public class PersonalViewListener implements ActionListener {
 
     private JTextField nameField;
